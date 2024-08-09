@@ -1,0 +1,36 @@
+
+services:
+  db:
+    container_name: ${CONTAINER_NAME}
+    image: mongo:6.0
+    volumes: 
+      - lumen-vol:/data/db
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    command: ['--auth']
+
+  mongo-express: 
+    depends_on:
+      - db
+    image: mongo-express:1.0.0-alpha.4
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: ${CONTAINER_NAME}
+    ports:
+      - 8081:8081
+    restart: always
+
+  
+
+volumes:
+  lumen-vol:
+    external: true
+
+
+
+    
